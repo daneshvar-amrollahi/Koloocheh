@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+message TestMessage {
+  string text = 1;
+}
+
+message Address {
+  int32 ip = 1;
+  int32 port = 2;
+}
+
+message ProbeMessage {
+  Address addr = 1;
+  string fileName = 2;
+}
+
+message ProbeResponse {
+  Address addr = 1;
+}
+
+service PeerToPeer {
+  rpc HeartBeat(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc TestRpc(TestMessage) returns (TestMessage) {}
+  rpc ProbeFile(ProbeMessage) returns (ProbeResponse) {}
+}
