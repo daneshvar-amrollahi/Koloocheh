@@ -25,10 +25,10 @@ class PeerToPeerStub(object):
                 request_serializer=nutellamd__pb2.TestMessage.SerializeToString,
                 response_deserializer=nutellamd__pb2.TestMessage.FromString,
                 )
-        self.ProbeFile = channel.unary_unary(
-                '/PeerToPeer/ProbeFile',
-                request_serializer=nutellamd__pb2.ProbeMessage.SerializeToString,
-                response_deserializer=nutellamd__pb2.ProbeResponse.FromString,
+        self.SearchFile = channel.unary_unary(
+                '/PeerToPeer/SearchFile',
+                request_serializer=nutellamd__pb2.SearchMessage.SerializeToString,
+                response_deserializer=nutellamd__pb2.SearchResponse.FromString,
                 )
 
 
@@ -47,7 +47,7 @@ class PeerToPeerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def ProbeFile(self, request, context):
+    def SearchFile(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -66,10 +66,10 @@ def add_PeerToPeerServicer_to_server(servicer, server):
                     request_deserializer=nutellamd__pb2.TestMessage.FromString,
                     response_serializer=nutellamd__pb2.TestMessage.SerializeToString,
             ),
-            'ProbeFile': grpc.unary_unary_rpc_method_handler(
-                    servicer.ProbeFile,
-                    request_deserializer=nutellamd__pb2.ProbeMessage.FromString,
-                    response_serializer=nutellamd__pb2.ProbeResponse.SerializeToString,
+            'SearchFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.SearchFile,
+                    request_deserializer=nutellamd__pb2.SearchMessage.FromString,
+                    response_serializer=nutellamd__pb2.SearchResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -116,7 +116,7 @@ class PeerToPeer(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def ProbeFile(request,
+    def SearchFile(request,
             target,
             options=(),
             channel_credentials=None,
@@ -126,8 +126,8 @@ class PeerToPeer(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/PeerToPeer/ProbeFile',
-            nutellamd__pb2.ProbeMessage.SerializeToString,
-            nutellamd__pb2.ProbeResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/PeerToPeer/SearchFile',
+            nutellamd__pb2.SearchMessage.SerializeToString,
+            nutellamd__pb2.SearchResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

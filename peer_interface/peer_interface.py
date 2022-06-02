@@ -1,6 +1,6 @@
-from peer import Peer
+from peer import Peer, serve
 from nutellamd_pb2 import Address
-
+from threading import Thread
 
 class PeerInterface:
 
@@ -8,10 +8,19 @@ class PeerInterface:
         self.peer = Peer(address)
 
     def run(self):
+        t = Thread(
+            target=serve,
+            args=(self.peer,)
+        )
+        t.start()
+
         while True:
             command = list(map(str, input().split()))
             if command[0] == "search":
-                pass
+                name = command[1]
+                self.peer.search(
+                    name=name
+                )
             if command[0] == "upload":
                 name = command[1]
                 data = command[2]

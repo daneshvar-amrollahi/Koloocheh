@@ -15,14 +15,14 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fnutellamd.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x1b\n\x0bTestMessage\x12\x0c\n\x04text\x18\x01 \x01(\t\"#\n\x07\x41\x64\x64ress\x12\n\n\x02ip\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\x05\"8\n\x0cProbeMessage\x12\x16\n\x04\x61\x64\x64r\x18\x01 \x01(\x0b\x32\x08.Address\x12\x10\n\x08\x66ileName\x18\x02 \x01(\t\"\'\n\rProbeResponse\x12\x16\n\x04\x61\x64\x64r\x18\x01 \x01(\x0b\x32\x08.Address\"\"\n\x04\x46ile\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xa2\x01\n\nPeerToPeer\x12=\n\tHeartBeat\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x00\x12\'\n\x07TestRpc\x12\x0c.TestMessage\x1a\x0c.TestMessage\"\x00\x12,\n\tProbeFile\x12\r.ProbeMessage\x1a\x0e.ProbeResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fnutellamd.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x1b\n\x0bTestMessage\x12\x0c\n\x04text\x18\x01 \x01(\t\"#\n\x07\x41\x64\x64ress\x12\n\n\x02ip\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\x05\"9\n\rSearchMessage\x12\x16\n\x04\x61\x64\x64r\x18\x01 \x01(\x0b\x32\x08.Address\x12\x10\n\x08\x66ileName\x18\x02 \x01(\t\"\x1e\n\x0eSearchResponse\x12\x0c\n\x04\x61\x64\x64r\x18\x01 \x01(\t\"\"\n\x04\x46ile\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xa5\x01\n\nPeerToPeer\x12=\n\tHeartBeat\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x00\x12\'\n\x07TestRpc\x12\x0c.TestMessage\x1a\x0c.TestMessage\"\x00\x12/\n\nSearchFile\x12\x0e.SearchMessage\x1a\x0f.SearchResponse\"\x00\x62\x06proto3')
 
 
 
 _TESTMESSAGE = DESCRIPTOR.message_types_by_name['TestMessage']
 _ADDRESS = DESCRIPTOR.message_types_by_name['Address']
-_PROBEMESSAGE = DESCRIPTOR.message_types_by_name['ProbeMessage']
-_PROBERESPONSE = DESCRIPTOR.message_types_by_name['ProbeResponse']
+_SEARCHMESSAGE = DESCRIPTOR.message_types_by_name['SearchMessage']
+_SEARCHRESPONSE = DESCRIPTOR.message_types_by_name['SearchResponse']
 _FILE = DESCRIPTOR.message_types_by_name['File']
 TestMessage = _reflection.GeneratedProtocolMessageType('TestMessage', (_message.Message,), {
   'DESCRIPTOR' : _TESTMESSAGE,
@@ -38,19 +38,19 @@ Address = _reflection.GeneratedProtocolMessageType('Address', (_message.Message,
   })
 _sym_db.RegisterMessage(Address)
 
-ProbeMessage = _reflection.GeneratedProtocolMessageType('ProbeMessage', (_message.Message,), {
-  'DESCRIPTOR' : _PROBEMESSAGE,
+SearchMessage = _reflection.GeneratedProtocolMessageType('SearchMessage', (_message.Message,), {
+  'DESCRIPTOR' : _SEARCHMESSAGE,
   '__module__' : 'nutellamd_pb2'
-  # @@protoc_insertion_point(class_scope:ProbeMessage)
+  # @@protoc_insertion_point(class_scope:SearchMessage)
   })
-_sym_db.RegisterMessage(ProbeMessage)
+_sym_db.RegisterMessage(SearchMessage)
 
-ProbeResponse = _reflection.GeneratedProtocolMessageType('ProbeResponse', (_message.Message,), {
-  'DESCRIPTOR' : _PROBERESPONSE,
+SearchResponse = _reflection.GeneratedProtocolMessageType('SearchResponse', (_message.Message,), {
+  'DESCRIPTOR' : _SEARCHRESPONSE,
   '__module__' : 'nutellamd_pb2'
-  # @@protoc_insertion_point(class_scope:ProbeResponse)
+  # @@protoc_insertion_point(class_scope:SearchResponse)
   })
-_sym_db.RegisterMessage(ProbeResponse)
+_sym_db.RegisterMessage(SearchResponse)
 
 File = _reflection.GeneratedProtocolMessageType('File', (_message.Message,), {
   'DESCRIPTOR' : _FILE,
@@ -67,12 +67,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _TESTMESSAGE._serialized_end=75
   _ADDRESS._serialized_start=77
   _ADDRESS._serialized_end=112
-  _PROBEMESSAGE._serialized_start=114
-  _PROBEMESSAGE._serialized_end=170
-  _PROBERESPONSE._serialized_start=172
-  _PROBERESPONSE._serialized_end=211
-  _FILE._serialized_start=213
-  _FILE._serialized_end=247
-  _PEERTOPEER._serialized_start=250
-  _PEERTOPEER._serialized_end=412
+  _SEARCHMESSAGE._serialized_start=114
+  _SEARCHMESSAGE._serialized_end=171
+  _SEARCHRESPONSE._serialized_start=173
+  _SEARCHRESPONSE._serialized_end=203
+  _FILE._serialized_start=205
+  _FILE._serialized_end=239
+  _PEERTOPEER._serialized_start=242
+  _PEERTOPEER._serialized_end=407
 # @@protoc_insertion_point(module_scope)

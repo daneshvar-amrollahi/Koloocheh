@@ -11,13 +11,13 @@ message Address {
   int32 port = 2;
 }
 
-message ProbeMessage {
-  Address addr = 1;
+message SearchMessage {
+  Address addr = 1; // Address of file requester
   string fileName = 2;
 }
 
-message ProbeResponse {
-  Address addr = 1;
+message SearchResponse {
+  string addr = 1; // Address of node having the file
 }
 
 message File {
@@ -28,5 +28,5 @@ message File {
 service PeerToPeer {
   rpc HeartBeat(google.protobuf.Empty) returns (google.protobuf.Empty) {}
   rpc TestRpc(TestMessage) returns (TestMessage) {}
-  rpc ProbeFile(ProbeMessage) returns (ProbeResponse) {}
+  rpc SearchFile(SearchMessage) returns (SearchResponse) {}
 }
