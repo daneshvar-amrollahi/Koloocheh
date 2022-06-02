@@ -8,14 +8,14 @@ def main():
         if sys.argv[1] == "master":
             pass
         elif sys.argv[1] == "peer":
-            ip = int(sys.argv[2])
-            port = int(sys.argv[3])
+            ip, port = list(map(int, sys.argv[2:4]))
             peer_interface = PeerInterface(
                 Address(
                     ip=ip,
                     port=port
                 )
             )
+
             peer_interface.run()
 
 
