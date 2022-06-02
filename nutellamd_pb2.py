@@ -15,7 +15,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fnutellamd.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x1b\n\x0bTestMessage\x12\x0c\n\x04text\x18\x01 \x01(\t\"#\n\x07\x41\x64\x64ress\x12\n\n\x02ip\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\x05\"8\n\x0cProbeMessage\x12\x16\n\x04\x61\x64\x64r\x18\x01 \x01(\x0b\x32\x08.Address\x12\x10\n\x08\x66ileName\x18\x02 \x01(\t\"\'\n\rProbeResponse\x12\x16\n\x04\x61\x64\x64r\x18\x01 \x01(\x0b\x32\x08.Address2\xa2\x01\n\nPeerToPeer\x12=\n\tHeartBeat\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x00\x12\'\n\x07TestRpc\x12\x0c.TestMessage\x1a\x0c.TestMessage\"\x00\x12,\n\tProbeFile\x12\r.ProbeMessage\x1a\x0e.ProbeResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fnutellamd.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x1b\n\x0bTestMessage\x12\x0c\n\x04text\x18\x01 \x01(\t\"#\n\x07\x41\x64\x64ress\x12\n\n\x02ip\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\x05\"8\n\x0cProbeMessage\x12\x16\n\x04\x61\x64\x64r\x18\x01 \x01(\x0b\x32\x08.Address\x12\x10\n\x08\x66ileName\x18\x02 \x01(\t\"\'\n\rProbeResponse\x12\x16\n\x04\x61\x64\x64r\x18\x01 \x01(\x0b\x32\x08.Address\"\"\n\x04\x46ile\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t2\xa2\x01\n\nPeerToPeer\x12=\n\tHeartBeat\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\"\x00\x12\'\n\x07TestRpc\x12\x0c.TestMessage\x1a\x0c.TestMessage\"\x00\x12,\n\tProbeFile\x12\r.ProbeMessage\x1a\x0e.ProbeResponse\"\x00\x62\x06proto3')
 
 
 
@@ -23,6 +23,7 @@ _TESTMESSAGE = DESCRIPTOR.message_types_by_name['TestMessage']
 _ADDRESS = DESCRIPTOR.message_types_by_name['Address']
 _PROBEMESSAGE = DESCRIPTOR.message_types_by_name['ProbeMessage']
 _PROBERESPONSE = DESCRIPTOR.message_types_by_name['ProbeResponse']
+_FILE = DESCRIPTOR.message_types_by_name['File']
 TestMessage = _reflection.GeneratedProtocolMessageType('TestMessage', (_message.Message,), {
   'DESCRIPTOR' : _TESTMESSAGE,
   '__module__' : 'nutellamd_pb2'
@@ -51,6 +52,13 @@ ProbeResponse = _reflection.GeneratedProtocolMessageType('ProbeResponse', (_mess
   })
 _sym_db.RegisterMessage(ProbeResponse)
 
+File = _reflection.GeneratedProtocolMessageType('File', (_message.Message,), {
+  'DESCRIPTOR' : _FILE,
+  '__module__' : 'nutellamd_pb2'
+  # @@protoc_insertion_point(class_scope:File)
+  })
+_sym_db.RegisterMessage(File)
+
 _PEERTOPEER = DESCRIPTOR.services_by_name['PeerToPeer']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -63,6 +71,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _PROBEMESSAGE._serialized_end=170
   _PROBERESPONSE._serialized_start=172
   _PROBERESPONSE._serialized_end=211
-  _PEERTOPEER._serialized_start=214
-  _PEERTOPEER._serialized_end=376
+  _FILE._serialized_start=213
+  _FILE._serialized_end=247
+  _PEERTOPEER._serialized_start=250
+  _PEERTOPEER._serialized_end=412
 # @@protoc_insertion_point(module_scope)

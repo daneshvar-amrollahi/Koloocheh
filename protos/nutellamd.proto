@@ -20,6 +20,11 @@ message ProbeResponse {
   Address addr = 1;
 }
 
+message File {
+    string name = 1;
+    string data = 2;
+}
+
 service PeerToPeer {
   rpc HeartBeat(google.protobuf.Empty) returns (google.protobuf.Empty) {}
   rpc TestRpc(TestMessage) returns (TestMessage) {}
