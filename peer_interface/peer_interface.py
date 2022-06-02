@@ -1,6 +1,9 @@
+import logging
+
 from peer import Peer, serve
 from nutellamd_pb2 import Address
 from threading import Thread
+
 
 class PeerInterface:
 
@@ -14,19 +17,35 @@ class PeerInterface:
         )
         t.start()
 
-        while True:
-            command = list(map(str, input().split()))
-            if command[0] == "search":
-                name = command[1]
-                self.peer.search(
-                    name=name
+        try:
+            while True:
+                self.handle_command()
+        except Exception:
+            print('An error occurred on thread MAIN')
+            exit(1)
+
+    def handle_command(self):
+        command = list(map(str, input().split()))
+        if command[0] == "search":
+            name = command[1]
+            self.peer.search(
+                name=name
+            )
+        if command[0] == "upload":
+            name, data = command[1:]
+            self.peer.upload(
+                name=name,
+                data=data
+            )
+
+        if command[0] == "get_files":
+            print(self.peer.print_files())
+
+        if command[0] == "add_neighbour":
+            ip, port = list(map(int, command[1:]))
+            self.peer.add_neighbour(
+                Address(
+                    ip=ip,
+                    port=port
                 )
-            if command[0] == "upload":
-                name = command[1]
-                data = command[2]
-                self.peer.upload(
-                    name=name,
-                    data=data
-                )
-            if command[0] == "get_files":
-                print(self.peer.print_files())
+            )
