@@ -24,7 +24,7 @@ def main():
                 port=port
             )
             peer_interface = PeerInterface(address)
-            peer_interface.advertise_to_master(address)
+            peer_interface.advertise_to_master()
             peer_interface.run()
 
 
