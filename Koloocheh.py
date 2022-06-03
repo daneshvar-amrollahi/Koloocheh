@@ -1,6 +1,6 @@
 import sys, logging
 from peer_interface import PeerInterface
-from nutellamd_pb2 import Address
+from koloocheh_pb2 import Address
 from master import Master
 from const import Const
 

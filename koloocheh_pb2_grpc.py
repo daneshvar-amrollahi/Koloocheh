@@ -3,7 +3,7 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-import nutellamd_pb2 as nutellamd__pb2
+import koloocheh_pb2 as koloocheh__pb2
 
 
 class PeerToPeerStub(object):
@@ -17,12 +17,12 @@ class PeerToPeerStub(object):
         """
         self.SearchFile = channel.unary_unary(
                 '/PeerToPeer/SearchFile',
-                request_serializer=nutellamd__pb2.SearchMessage.SerializeToString,
+                request_serializer=koloocheh__pb2.SearchMessage.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.FoundFile = channel.unary_unary(
                 '/PeerToPeer/FoundFile',
-                request_serializer=nutellamd__pb2.SearchResponse.SerializeToString,
+                request_serializer=koloocheh__pb2.SearchResponse.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
 
@@ -47,12 +47,12 @@ def add_PeerToPeerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SearchFile': grpc.unary_unary_rpc_method_handler(
                     servicer.SearchFile,
-                    request_deserializer=nutellamd__pb2.SearchMessage.FromString,
+                    request_deserializer=koloocheh__pb2.SearchMessage.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'FoundFile': grpc.unary_unary_rpc_method_handler(
                     servicer.FoundFile,
-                    request_deserializer=nutellamd__pb2.SearchResponse.FromString,
+                    request_deserializer=koloocheh__pb2.SearchResponse.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -71,15 +71,16 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
+            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/PeerToPeer/SearchFile',
-            nutellamd__pb2.SearchMessage.SerializeToString,
+            koloocheh__pb2.SearchMessage.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def FoundFile(request,
@@ -87,15 +88,16 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
+            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/PeerToPeer/FoundFile',
-            nutellamd__pb2.SearchResponse.SerializeToString,
+            koloocheh__pb2.SearchResponse.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
 
 class PeerMasterStub(object):
@@ -109,13 +111,13 @@ class PeerMasterStub(object):
         """
         self.PeerJoined = channel.unary_unary(
                 '/PeerMaster/PeerJoined',
-                request_serializer=nutellamd__pb2.Address.SerializeToString,
+                request_serializer=koloocheh__pb2.Address.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.GetNeighbours = channel.unary_unary(
                 '/PeerMaster/GetNeighbours',
-                request_serializer=nutellamd__pb2.Address.SerializeToString,
-                response_deserializer=nutellamd__pb2.NeighbourList.FromString,
+                request_serializer=koloocheh__pb2.Address.SerializeToString,
+                response_deserializer=koloocheh__pb2.NeighbourList.FromString,
                 )
 
 
@@ -139,13 +141,13 @@ def add_PeerMasterServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'PeerJoined': grpc.unary_unary_rpc_method_handler(
                     servicer.PeerJoined,
-                    request_deserializer=nutellamd__pb2.Address.FromString,
+                    request_deserializer=koloocheh__pb2.Address.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'GetNeighbours': grpc.unary_unary_rpc_method_handler(
                     servicer.GetNeighbours,
-                    request_deserializer=nutellamd__pb2.Address.FromString,
-                    response_serializer=nutellamd__pb2.NeighbourList.SerializeToString,
+                    request_deserializer=koloocheh__pb2.Address.FromString,
+                    response_serializer=koloocheh__pb2.NeighbourList.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -163,15 +165,16 @@ class PeerMaster(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
+            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/PeerMaster/PeerJoined',
-            nutellamd__pb2.Address.SerializeToString,
+            koloocheh__pb2.Address.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def GetNeighbours(request,
@@ -179,12 +182,13 @@ class PeerMaster(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
+            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/PeerMaster/GetNeighbours',
-            nutellamd__pb2.Address.SerializeToString,
-            nutellamd__pb2.NeighbourList.FromString,
+            koloocheh__pb2.Address.SerializeToString,
+            koloocheh__pb2.NeighbourList.FromString,
             options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -1,7 +1,7 @@
-import nutellamd_pb2_grpc
+import koloocheh_pb2_grpc
 from peer import Peer, serve
 from const import const
-from nutellamd_pb2 import Address
+from koloocheh_pb2 import Address
 from threading import Thread, Timer
 import grpc
 import logging

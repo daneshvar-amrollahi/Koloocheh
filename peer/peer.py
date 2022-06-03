@@ -6,10 +6,10 @@ import logging
 import google
 
 import const
-import nutellamd_pb2_grpc
+import koloocheh_pb2_grpc
 from const import Const
-from nutellamd_pb2_grpc import PeerToPeerServicer
-from nutellamd_pb2 import Address, File, SearchMessage, SearchResponse
+from koloocheh_pb2_grpc import PeerToPeerServicer
+from koloocheh_pb2 import Address, File, SearchMessage, SearchResponse
 import grpc
 from typing import List, Set, Dict
 
@@ -55,7 +55,7 @@ class Peer(PeerToPeerServicer):
         if found:
             file_requester_address: Address = request.addr
             with grpc.insecure_channel(f'localhost:{file_requester_address.port}') as channel:
-                stub = nutellamd_pb2_grpc.PeerToPeerStub(channel)
+                stub = koloocheh_pb2_grpc.PeerToPeerStub(channel)
                 stub.FoundFile(
                     SearchResponse(
                         addr=self.address,
@@ -96,7 +96,7 @@ class Peer(PeerToPeerServicer):
 
     def _search(self, identifier, name, neighbour_addr):
         with grpc.insecure_channel(f'localhost:{neighbour_addr.port}') as channel:
-            stub = nutellamd_pb2_grpc.PeerToPeerStub(channel)
+            stub = koloocheh_pb2_grpc.PeerToPeerStub(channel)
 
             stub.SearchFile(
                 SearchMessage(
@@ -111,7 +111,7 @@ class Peer(PeerToPeerServicer):
 
     def advertise_to_master(self):
         with grpc.insecure_channel(f'localhost:{const.Const.MASTER_ADDRESS.port}') as channel:
-            stub = nutellamd_pb2_grpc.PeerMasterStub(channel)
+            stub = koloocheh_pb2_grpc.PeerMasterStub(channel)
             stub.PeerJoined(self.address)
 
     def get_neighbours(self):
@@ -120,14 +120,14 @@ class Peer(PeerToPeerServicer):
             with grpc.insecure_channel(
                     f'localhost:{const.Const.MASTER_ADDRESS.port}'
             ) as channel:
-                stub = nutellamd_pb2_grpc.PeerMasterStub(channel)
+                stub = koloocheh_pb2_grpc.PeerMasterStub(channel)
                 self.neighbours = stub.GetNeighbours(self.address).neighbours
                 # self.logger.info(f'Neighbours received from master: \n{self.neighbours}')
 
 
 def serve(peer: Peer):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    nutellamd_pb2_grpc.add_PeerToPeerServicer_to_server(
+    koloocheh_pb2_grpc.add_PeerToPeerServicer_to_server(
         peer, server)
     server.add_insecure_port(f'localhost:{peer.address.port}')
     server.start()

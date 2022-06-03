@@ -1,5 +1,5 @@
 from typing import Tuple
-from nutellamd_pb2 import Address
+from koloocheh_pb2 import Address
 
 
 class AddressTupleSerializer:

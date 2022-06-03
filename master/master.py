@@ -3,14 +3,14 @@ import random
 import time
 import google
 import grpc
-import nutellamd_pb2_grpc
+import koloocheh_pb2_grpc
 
 from concurrent import futures
 from threading import Thread
 from typing import List, Dict, Tuple
 from const import Const
-from nutellamd_pb2 import Address, NeighbourList
-from nutellamd_pb2_grpc import PeerMasterServicer
+from koloocheh_pb2 import Address, NeighbourList
+from koloocheh_pb2_grpc import PeerMasterServicer
 from serializer import AddressTupleSerializer
 
 
@@ -44,7 +44,7 @@ class Master(PeerMasterServicer):
         address: Tuple[int, int] = AddressTupleSerializer.to_tuple(request)
         self.network[address] = []
 
-        self.logger.info(f"Peer with ip={request.ip} , port={request.port} joined NutellaMD!")
+        self.logger.info(f"Peer with ip={request.ip} , port={request.port} joined Koloocheh!")
 
         for p in self.network:
             if p == address:
@@ -69,7 +69,7 @@ class Master(PeerMasterServicer):
 
 def serve(master: Master):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    nutellamd_pb2_grpc.add_PeerMasterServicer_to_server(
+    koloocheh_pb2_grpc.add_PeerMasterServicer_to_server(
         master, server)
     server.add_insecure_port(f'localhost:{Const.MASTER_ADDRESS.port}')
     server.start()

@@ -1,17 +1,17 @@
-# NutellaMD
+# Koloocheh
 
-**NutellaMD** is a decentralized peer-to-peer file sharing system implemented with the [gRPC](https://grpc.io/) framework in Python.
+**Koloocheh** is a decentralized peer-to-peer file sharing system implemented with the [gRPC](https://grpc.io/) framework in Python.
 
 ## Installation
 
-To run NutellaMD, follow the following steps:
+To run Koloocheh, follow the following steps:
 
 1. Make sure you have ```python3``` and ```pip``` installed on your machine. 
 
 2. Clone the repository:
     ```
-    $ git clone git@github.com:daneshvar-amrollahi/NutellaMD.git
-    $ cd NutellaMD
+    $ git clone git@github.com:daneshvar-amrollahi/Koloocheh.git
+    $ cd Koloocheh
     ```
 
 3. Create a virtual environment in the ```.venv``` directory:
@@ -35,11 +35,11 @@ To run NutellaMD, follow the following steps:
 ### Master
 The master is created exactly once (in the very beginning):
 ```
-$ python NutellaMD.py master
+$ python Koloocheh.py master
 ```
 
 ### Peer
 A new peer can join the network using the following command:
 ```
-$ python NutellaMD.py peer <ip> <port>
+$ python Koloocheh.py peer <ip> <port>
 ```
