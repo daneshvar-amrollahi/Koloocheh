@@ -1,5 +1,7 @@
 # NutellaMD
 
+**NutellaMD** is a decentralized peer-to-peer file sharing system implemented with the [gRPC](https://grpc.io/) framework in Python.
+
 ## Installation
 
 To run NutellaMD, follow the following steps:
