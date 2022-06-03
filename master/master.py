@@ -1,22 +1,29 @@
-import time
-from concurrent import futures
-
-import google
-import nutellamd_pb2_grpc
-from nutellamd_pb2 import Address
-from nutellamd_pb2_grpc import PeerMasterServicer
-from typing import List
 import logging
+import random
+import time
+import google
 import grpc
-from const import Const
+import nutellamd_pb2_grpc
+
+from concurrent import futures
 from threading import Thread
+from typing import List, Dict, Tuple
+from const import Const
+from nutellamd_pb2 import Address, NeighbourList
+from nutellamd_pb2_grpc import PeerMasterServicer
+from serializer import AddressTupleSerializer
+
 
 class Master(PeerMasterServicer):
 
     def __init__(self, address: Address):
         self.address: Address = address
         self.prob_edge = 1
-        self.peers: List[Address] = []
+        self.network: Dict[
+            Tuple[int, int],
+            List[Tuple[int, int]]
+        ] = dict()
+
         self.logger = logging.getLogger(__name__)
 
     def run(self):
@@ -28,16 +35,36 @@ class Master(PeerMasterServicer):
         t.start()
 
         try:
-            while (True):
+            while True:
                 time.sleep(1)
         except KeyboardInterrupt:
             exit(1)
 
     def PeerJoined(self, request, context):
-        self.peers.append(request)
+        address: Tuple[int, int] = AddressTupleSerializer.to_tuple(request)
+        self.network[address] = []
+
         self.logger.info(f"Peer with ip={request.ip} , port={request.port} joined NutellaMD!")
+
+        for p in self.network:
+            if p == address:
+                continue
+            if random.random() <= self.prob_edge:
+                self.network[address].append(p)
+                self.network[p].append(address)
+                self.logger.info(f"Connection established between {address}, {p}")
+
         return google.protobuf.empty_pb2.Empty()
 
+    def GetNeighbours(self, request, context):
+        address = AddressTupleSerializer.to_tuple(request)
+
+        return NeighbourList(
+            neighbours=[
+                AddressTupleSerializer.to_address(x)
+                for x in self.network[address]
+            ]
+        )
 
 
 def serve(master: Master):
