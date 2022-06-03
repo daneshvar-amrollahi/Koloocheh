@@ -15,11 +15,6 @@ class PeerToPeerStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.HeartBeat = channel.unary_unary(
-                '/PeerToPeer/HeartBeat',
-                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
         self.SearchFile = channel.unary_unary(
                 '/PeerToPeer/SearchFile',
                 request_serializer=nutellamd__pb2.SearchMessage.SerializeToString,
@@ -34,12 +29,6 @@ class PeerToPeerStub(object):
 
 class PeerToPeerServicer(object):
     """Missing associated documentation comment in .proto file."""
-
-    def HeartBeat(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
 
     def SearchFile(self, request, context):
         """Missing associated documentation comment in .proto file."""
@@ -56,11 +45,6 @@ class PeerToPeerServicer(object):
 
 def add_PeerToPeerServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'HeartBeat': grpc.unary_unary_rpc_method_handler(
-                    servicer.HeartBeat,
-                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
             'SearchFile': grpc.unary_unary_rpc_method_handler(
                     servicer.SearchFile,
                     request_deserializer=nutellamd__pb2.SearchMessage.FromString,
@@ -82,29 +66,11 @@ class PeerToPeer(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def HeartBeat(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/PeerToPeer/HeartBeat',
-            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
     def SearchFile(request,
             target,
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -113,7 +79,7 @@ class PeerToPeer(object):
             nutellamd__pb2.SearchMessage.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def FoundFile(request,
@@ -121,7 +87,6 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -130,7 +95,7 @@ class PeerToPeer(object):
             nutellamd__pb2.SearchResponse.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)
 
 
 class PeerMasterStub(object):
@@ -147,12 +112,23 @@ class PeerMasterStub(object):
                 request_serializer=nutellamd__pb2.Address.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.GetNeighbours = channel.unary_unary(
+                '/PeerMaster/GetNeighbours',
+                request_serializer=nutellamd__pb2.Address.SerializeToString,
+                response_deserializer=nutellamd__pb2.NeighbourList.FromString,
+                )
 
 
 class PeerMasterServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def PeerJoined(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetNeighbours(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -165,6 +141,11 @@ def add_PeerMasterServicer_to_server(servicer, server):
                     servicer.PeerJoined,
                     request_deserializer=nutellamd__pb2.Address.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'GetNeighbours': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetNeighbours,
+                    request_deserializer=nutellamd__pb2.Address.FromString,
+                    response_serializer=nutellamd__pb2.NeighbourList.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -182,7 +163,6 @@ class PeerMaster(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -191,4 +171,20 @@ class PeerMaster(object):
             nutellamd__pb2.Address.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetNeighbours(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/PeerMaster/GetNeighbours',
+            nutellamd__pb2.Address.SerializeToString,
+            nutellamd__pb2.NeighbourList.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)

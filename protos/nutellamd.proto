@@ -24,11 +24,15 @@ message File {
 }
 
 service PeerToPeer {
-  rpc HeartBeat(google.protobuf.Empty) returns (google.protobuf.Empty) {}
   rpc SearchFile(SearchMessage) returns (google.protobuf.Empty) {}
   rpc FoundFile(SearchResponse) returns (google.protobuf.Empty) {}
 }
 
+message NeighbourList {
+  repeated Address neighbours = 1;
+}
+
 service PeerMaster {
   rpc PeerJoined(Address) returns (google.protobuf.Empty) {}
+  rpc GetNeighbours(Address) returns (NeighbourList) {}
 }
