@@ -1,5 +1,7 @@
 # Koloocheh
 
+![Koloocheh](assets/koloocheh.jpg)
+
 **Koloocheh** is a decentralized peer-to-peer file sharing system implemented with the [gRPC](https://grpc.io/) framework in Python.
 
 ## Installation
