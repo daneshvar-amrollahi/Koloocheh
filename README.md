@@ -20,17 +20,12 @@ To run NutellaMD, follow the following steps:
     $ python -m venv .venv
     ```
 
-3. Install the packages required:
-    ```
-    $ pip install -r requirements.txt
-    ```
-
-4. Activate the virtual environment:
+3. Activate the virtual environment:
     ```
     $ source .venv/bin/activate
     ```
 
-5. Install the required dependencies:
+4. Install the required dependencies:
     ```
     $ pip install -r requirements.txt
     ```
