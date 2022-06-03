@@ -1,13 +1,17 @@
 import random
 import string
+import time
 from concurrent import futures
 import logging
 import google
+
+import const
 import nutellamd_pb2_grpc
+from const import Const
 from nutellamd_pb2_grpc import PeerToPeerServicer
 from nutellamd_pb2 import Address, File, SearchMessage, SearchResponse
 import grpc
-from typing import List, Set
+from typing import List, Set, Dict
 
 
 class Peer(PeerToPeerServicer):
@@ -17,7 +21,7 @@ class Peer(PeerToPeerServicer):
         self.neighbours: List[Address] = []
         self.files: List[File] = []
         self.query_ids: Set[str] = set()
-        self.query_files: dict[str, List[Address]] = dict()
+        self.query_files: Dict[str, List[Address]] = dict()
         self.logger = logging.getLogger(__name__)
 
     def FoundFile(self, request, context):
@@ -32,7 +36,6 @@ class Peer(PeerToPeerServicer):
         return google.protobuf.empty_pb2.Empty()
 
     def SearchFile(self, request: SearchMessage, context):
-        # TODO: Add lock
         sender, name, identifier = (
             request.addr,
             request.fileName,
@@ -41,6 +44,7 @@ class Peer(PeerToPeerServicer):
 
         if identifier in self.query_ids:
             return google.protobuf.empty_pb2.Empty()
+
         self.query_ids.add(identifier)
 
         found = False
@@ -74,30 +78,51 @@ class Peer(PeerToPeerServicer):
         return self.files
 
     @staticmethod
-    def _get_random_identifier():
-        return ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+    def gen_random_identifier():
+        return ''.join(
+            random.choices(
+                string.ascii_letters + string.digits,
+                k=Const.Peer.IDENTIFIER_LENGTH,
+            )
+        )
 
-    def search(self, name: str, identifier: str = None):
+    def search(self, name: str, identifier: str):
         """rpc to all neighbours"""
+        if identifier not in self.query_ids:
+            self.query_ids.add(identifier)
+        self.logger.info(f'Neighbours before search: {self.neighbours}')
         for neighbour_addr in self.neighbours:
-            self._search_on_neighbour(identifier, name, neighbour_addr)
+            self._search(identifier, name, neighbour_addr)
 
-    def _search_on_neighbour(self, identifier, name, neighbour_addr):
+    def _search(self, identifier, name, neighbour_addr):
         with grpc.insecure_channel(f'localhost:{neighbour_addr.port}') as channel:
             stub = nutellamd_pb2_grpc.PeerToPeerStub(channel)
-            message_id = identifier if identifier \
-                else self._get_random_identifier()
 
             stub.SearchFile(
                 SearchMessage(
                     addr=self.address,
                     fileName=name,
-                    identifier=message_id,
+                    identifier=identifier,
                 )
             )
 
     def add_neighbour(self, address: Address):
         self.neighbours.append(address)
+
+    def advertise_to_master(self):
+        with grpc.insecure_channel(f'localhost:{const.Const.MASTER_ADDRESS.port}') as channel:
+            stub = nutellamd_pb2_grpc.PeerMasterStub(channel)
+            stub.PeerJoined(self.address)
+
+    def get_neighbours(self):
+        while True:
+            time.sleep(Const.Peer.GET_NEIGHBOUR_RATE)
+            with grpc.insecure_channel(
+                    f'localhost:{const.Const.MASTER_ADDRESS.port}'
+            ) as channel:
+                stub = nutellamd_pb2_grpc.PeerMasterStub(channel)
+                self.neighbours = stub.GetNeighbours(self.address).neighbours
+                # self.logger.info(f'Neighbours received from master: \n{self.neighbours}')
 
 
 def serve(peer: Peer):
