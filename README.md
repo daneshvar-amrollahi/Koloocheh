@@ -32,3 +32,17 @@ To run NutellaMD, follow the following steps:
     ```
     $ pip install -r requirements.txt
     ```
+
+## How to run?
+
+### Master
+The master is created exactly once (in the very beginning):
+```
+$ python NutellaMD.py master
+```
+
+### Peer
+A new peer can join the network using the following command:
+```
+$ python NutellaMD.py peer <ip> <port>
+```
