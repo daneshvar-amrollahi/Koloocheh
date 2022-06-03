@@ -2,10 +2,6 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-message TestMessage {
-  string text = 1;
-}
-
 message Address {
   int32 ip = 1;
   int32 port = 2;
@@ -18,7 +14,8 @@ message SearchMessage {
 }
 
 message SearchResponse {
-  string addr = 1; // Address of node having the file
+  Address addr = 1; // Address of node having the file
+  string identifier = 2;
 }
 
 message File {
@@ -28,6 +25,6 @@ message File {
 
 service PeerToPeer {
   rpc HeartBeat(google.protobuf.Empty) returns (google.protobuf.Empty) {}
-  rpc TestRpc(TestMessage) returns (TestMessage) {}
   rpc SearchFile(SearchMessage) returns (google.protobuf.Empty) {}
+  rpc FoundFile(SearchResponse) returns (google.protobuf.Empty) {}
 }

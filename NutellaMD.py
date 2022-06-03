@@ -1,9 +1,10 @@
-import sys
+import sys, logging
 from peer_interface import PeerInterface
 from nutellamd_pb2 import Address
 
 
 def main():
+    logging.basicConfig(level=logging.INFO)
     if len(sys.argv) > 1:
         if sys.argv[1] == "master":
             pass

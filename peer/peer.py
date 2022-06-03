@@ -1,12 +1,11 @@
 import random
 import string
 from concurrent import futures
-
+import logging
 import google
-
 import nutellamd_pb2_grpc
 from nutellamd_pb2_grpc import PeerToPeerServicer
-from nutellamd_pb2 import TestMessage, Address, File, SearchMessage, SearchResponse
+from nutellamd_pb2 import Address, File, SearchMessage, SearchResponse
 import grpc
 from typing import List, Set
 
@@ -18,15 +17,22 @@ class Peer(PeerToPeerServicer):
         self.neighbours: List[Address] = []
         self.files: List[File] = []
         self.query_ids: Set[str] = set()
+        self.query_files: dict[str, List[Address]] = dict()
+        self.logger = logging.getLogger(__name__)
 
-    def TestRpc(self, request, context):
-        return TestMessage(
-            text="NutellaMD"
-        )
+    def FoundFile(self, request, context):
+        address: Address = request.addr
+        identifier: str = request.identifier
+        self.logger.info(f"File with id='{identifier}' found at ({address.ip},{address.port})")
+
+        if identifier in self.query_files:
+            self.query_files[identifier].append(address)
+        else:
+            self.query_files[identifier] = [address]
+        return google.protobuf.empty_pb2.Empty()
 
     def SearchFile(self, request: SearchMessage, context):
         # TODO: Add lock
-        print(f'SearchFile called on {self.address.port}')
         sender, name, identifier = (
             request.addr,
             request.fileName,
@@ -40,10 +46,19 @@ class Peer(PeerToPeerServicer):
         found = False
         for file in self.files:
             if file.name == name:
-                print(f"File found in ({self.address.ip},{self.address.port})")
                 found = True
 
-        if not found:
+        if found:
+            file_requester_address: Address = request.addr
+            with grpc.insecure_channel(f'localhost:{file_requester_address.port}') as channel:
+                stub = nutellamd_pb2_grpc.PeerToPeerStub(channel)
+                stub.FoundFile(
+                    SearchResponse(
+                        addr=self.address,
+                        identifier=request.identifier
+                    )
+                )
+        else:
             self.search(name, identifier)
 
         return google.protobuf.empty_pb2.Empty()
@@ -60,19 +75,12 @@ class Peer(PeerToPeerServicer):
 
     @staticmethod
     def _get_random_identifier():
-        LENGTH = 10
-        return ''.join(
-            (random.choice(string.ascii_lowercase) for x in range(LENGTH))
-        )
+        return ''.join(random.choices(string.ascii_letters + string.digits, k=10))
 
     def search(self, name: str, identifier: str = None):
         """rpc to all neighbours"""
-        print(f'search called in {self.address.port}')
         for neighbour_addr in self.neighbours:
-            print(f'trying to search on {neighbour_addr.port}')
             self._search_on_neighbour(identifier, name, neighbour_addr)
-
-        print("Client received")
 
     def _search_on_neighbour(self, identifier, name, neighbour_addr):
         with grpc.insecure_channel(f'localhost:{neighbour_addr.port}') as channel:

@@ -20,14 +20,14 @@ class PeerToPeerStub(object):
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
-        self.TestRpc = channel.unary_unary(
-                '/PeerToPeer/TestRpc',
-                request_serializer=nutellamd__pb2.TestMessage.SerializeToString,
-                response_deserializer=nutellamd__pb2.TestMessage.FromString,
-                )
         self.SearchFile = channel.unary_unary(
                 '/PeerToPeer/SearchFile',
                 request_serializer=nutellamd__pb2.SearchMessage.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.FoundFile = channel.unary_unary(
+                '/PeerToPeer/FoundFile',
+                request_serializer=nutellamd__pb2.SearchResponse.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
 
@@ -41,13 +41,13 @@ class PeerToPeerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def TestRpc(self, request, context):
+    def SearchFile(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SearchFile(self, request, context):
+    def FoundFile(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -61,14 +61,14 @@ def add_PeerToPeerServicer_to_server(servicer, server):
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
-            'TestRpc': grpc.unary_unary_rpc_method_handler(
-                    servicer.TestRpc,
-                    request_deserializer=nutellamd__pb2.TestMessage.FromString,
-                    response_serializer=nutellamd__pb2.TestMessage.SerializeToString,
-            ),
             'SearchFile': grpc.unary_unary_rpc_method_handler(
                     servicer.SearchFile,
                     request_deserializer=nutellamd__pb2.SearchMessage.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'FoundFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.FoundFile,
+                    request_deserializer=nutellamd__pb2.SearchResponse.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -87,6 +87,7 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
+            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -95,23 +96,7 @@ class PeerToPeer(object):
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def TestRpc(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/PeerToPeer/TestRpc',
-            nutellamd__pb2.TestMessage.SerializeToString,
-            nutellamd__pb2.TestMessage.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def SearchFile(request,
@@ -119,6 +104,7 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
+            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -127,4 +113,21 @@ class PeerToPeer(object):
             nutellamd__pb2.SearchMessage.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def FoundFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/PeerToPeer/FoundFile',
+            nutellamd__pb2.SearchResponse.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -20,8 +20,7 @@ class PeerInterface:
         try:
             while True:
                 self.handle_command()
-        except Exception:
-            print('An error occurred on thread MAIN')
+        except KeyboardInterrupt:
             exit(1)
 
     def handle_command(self):
