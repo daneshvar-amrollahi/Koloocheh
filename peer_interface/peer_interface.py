@@ -1,19 +1,22 @@
-import logging
-
+import nutellamd_pb2_grpc
 from peer import Peer, serve
+from const import const
 from nutellamd_pb2 import Address
 from threading import Thread
-
+import grpc
+import logging
 
 class PeerInterface:
 
     def __init__(self, address: Address):
         self.peer = Peer(address)
+        self.logger = logging.getLogger(__name__)
 
     def run(self):
         t = Thread(
             target=serve,
-            args=(self.peer,)
+            args=(self.peer,),
+            daemon=True
         )
         t.start()
 
@@ -36,6 +39,7 @@ class PeerInterface:
                 name=name,
                 data=data
             )
+            self.logger.info(f"Peer with ip={self.peer.address.ip}, port={self.peer.address.port} uploaded file {name} with data: {data}")
 
         if command[0] == "get_files":
             print(self.peer.print_files())
@@ -48,3 +52,9 @@ class PeerInterface:
                     port=port
                 )
             )
+
+    def advertise_to_master(self, address: Address):
+        with grpc.insecure_channel(f'localhost:{const.Const.MASTER_ADDRESS.port}') as channel:
+            stub = nutellamd_pb2_grpc.PeerMasterStub(channel)
+            stub.PeerJoined(address)
+

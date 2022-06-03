@@ -28,3 +28,7 @@ service PeerToPeer {
   rpc SearchFile(SearchMessage) returns (google.protobuf.Empty) {}
   rpc FoundFile(SearchResponse) returns (google.protobuf.Empty) {}
 }
+
+service PeerMaster {
+  rpc PeerJoined(Address) returns (google.protobuf.Empty) {}
+}

@@ -23,7 +23,7 @@ class Peer(PeerToPeerServicer):
     def FoundFile(self, request, context):
         address: Address = request.addr
         identifier: str = request.identifier
-        self.logger.info(f"File with id='{identifier}' found at ({address.ip},{address.port})")
+        self.logger.info(f"Query with id='{identifier}' found requested file at ({address.ip},{address.port})")
 
         if identifier in self.query_files:
             self.query_files[identifier].append(address)
