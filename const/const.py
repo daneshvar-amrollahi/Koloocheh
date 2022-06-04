@@ -11,3 +11,4 @@ class Const:
         GET_NEIGHBOUR_RATE = 5
         IDENTIFIER_LENGTH = 10
         CHECK_LIVENESS_RATE = GET_NEIGHBOUR_RATE * 2
+        QUERY_TTL = 10
