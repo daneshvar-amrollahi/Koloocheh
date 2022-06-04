@@ -150,7 +150,7 @@ class Peer(PeerToPeerServicer):
         """Check status for each query"""
         while True:
             time.sleep(Const.Peer.QUERY_TTL * 1.5)
-            self.logger.info('inside check_query_results')
+
             queries_expired = []
             for query in self.queries_initiated:
                 if (datetime.datetime.now() - self.queries_initiated[query]).total_seconds() > \
