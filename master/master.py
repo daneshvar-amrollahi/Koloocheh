@@ -10,7 +10,7 @@ import koloocheh_pb2_grpc
 import datetime
 
 from concurrent import futures
-from threading import Thread
+from threading import Thread, Lock
 from typing import List, Dict, Tuple, Set
 from const import Const
 from koloocheh_pb2 import Address, NeighbourList
@@ -77,6 +77,7 @@ class Master(PeerMasterServicer):
         address: Tuple[int, int] = AddressTupleSerializer.to_tuple(request)
         self.network[address] = set()
         self.logger.info(f"Peer with ip={request.ip} , port={request.port} joined Koloocheh!")
+        self.logger.info(f"PeerJoined: network: {self.network}")
         self.last_grpc_call[address] = datetime.datetime.now()
         for p in self.network:
             if p == address:
@@ -90,6 +91,7 @@ class Master(PeerMasterServicer):
 
     def GetNeighbours(self, request, context):
         address = AddressTupleSerializer.to_tuple(request)
+        self.logger.info(f"GetNeighbours: network: {self.network}")
         self.last_grpc_call[address] = datetime.datetime.now()
         return NeighbourList(
             neighbours=[
