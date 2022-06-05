@@ -1,3 +1,4 @@
+import datetime
 import random
 import string
 import time
@@ -14,14 +15,24 @@ import grpc
 from typing import List, Set, Dict
 
 
+class QueryInfo:
+    def __init__(self, initiated_at):
+        self.initiated_at = initiated_at
+        self.responding_peers: List[Address] = []
+
+
 class Peer(PeerToPeerServicer):
 
     def __init__(self, address: Address):
         self.address = address
         self.neighbours: List[Address] = []
         self.files: List[File] = []
-        self.query_ids: Set[str] = set()
+
+        self.query_mark: Set[str] = set()
         self.query_files: Dict[str, List[Address]] = dict()
+        self.queries_initiated: Dict[str, datetime.datetime] = dict()
+        self.id_to_filename: Dict[str, str] = dict()
+
         self.logger = logging.getLogger(__name__)
 
     def FoundFile(self, request, context):
@@ -42,10 +53,10 @@ class Peer(PeerToPeerServicer):
             request.identifier,
         )
 
-        if identifier in self.query_ids:
+        if identifier in self.query_mark:
             return google.protobuf.empty_pb2.Empty()
 
-        self.query_ids.add(identifier)
+        self.query_mark.add(identifier)
 
         found = False
         for file in self.files:
@@ -86,10 +97,21 @@ class Peer(PeerToPeerServicer):
             )
         )
 
+    def initiate_search(self, name: str):
+        identifier = self.gen_random_identifier()
+
+        self.query_mark.add(identifier)
+        self.queries_initiated[identifier] = datetime.datetime.now()
+
+        self.id_to_filename[identifier] = name
+
+        self.search(name, identifier)
+
     def search(self, name: str, identifier: str):
         """rpc to all neighbours"""
-        if identifier not in self.query_ids:
-            self.query_ids.add(identifier)
+
+        if identifier not in self.query_mark:
+            self.query_mark.add(identifier)
         self.logger.info(f'Neighbours before search: {self.neighbours}')
         for neighbour_addr in self.neighbours:
             self._search(identifier, name, neighbour_addr)
@@ -123,6 +145,26 @@ class Peer(PeerToPeerServicer):
                 stub = koloocheh_pb2_grpc.PeerMasterStub(channel)
                 self.neighbours = stub.GetNeighbours(self.address).neighbours
                 # self.logger.info(f'Neighbours received from master: \n{self.neighbours}')
+
+    def check_query_results(self):
+        """Check status for each query"""
+        while True:
+            time.sleep(Const.Peer.QUERY_TTL * 1.5)
+
+            queries_expired = []
+            for query in self.queries_initiated:
+                if (datetime.datetime.now() - self.queries_initiated[query]).total_seconds() > \
+                        Const.Peer.QUERY_TTL:
+                    self.logger.info(f'query (id={query}, filename={self.id_to_filename[query]}) expired')
+                    queries_expired.append(query)
+
+            for query in queries_expired:
+                self._remove_query(query)
+
+    def _remove_query(self, query: str):
+        self.queries_initiated.pop(query, None)
+        self.query_mark.remove(query)
+        self.query_files.pop(query, None)
 
 
 def serve(peer: Peer):

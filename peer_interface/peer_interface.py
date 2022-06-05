@@ -27,6 +27,12 @@ class PeerInterface:
         )
         thread_get_neighbours.start()
 
+        thread_query_results = Thread(
+            target=self.peer.check_query_results,
+            daemon=True
+        )
+        thread_query_results.start()
+
         try:
             while True:
                 self.handle_command()
@@ -37,10 +43,7 @@ class PeerInterface:
         command = list(map(str, input().split()))
         if command[0] == "search":
             name = command[1]
-            self.peer.search(
-                name=name,
-                identifier=Peer.gen_random_identifier()
-            )
+            self.peer.initiate_search(name=name)
         if command[0] == "upload":
             name, data = command[1:]
             self.peer.upload(

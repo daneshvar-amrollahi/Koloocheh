@@ -10,7 +10,7 @@ import koloocheh_pb2_grpc
 import datetime
 
 from concurrent import futures
-from threading import Thread
+from threading import Thread, Lock
 from typing import List, Dict, Tuple, Set
 from const import Const
 from koloocheh_pb2 import Address, NeighbourList
@@ -26,6 +26,7 @@ class Master(PeerMasterServicer):
         self.network: Dict[Tuple[int, int], Set[Tuple[int, int]]] = dict()
         self.last_grpc_call: Dict[Tuple[int, int], datetime.datetime] = dict()
         self.logger = logging.getLogger(__name__)
+        self.network_lock = Lock()
 
     def run(self):
         thread_run = Thread(
@@ -54,9 +55,12 @@ class Master(PeerMasterServicer):
             self.print_graph()
 
     def check_liveness(self):
-        dead_peers = []
         while True:
             time.sleep(Const.Peer.CHECK_LIVENESS_RATE)
+
+            self.network_lock.acquire()
+            dead_peers = []
+
             for address in self.network:
                 now = datetime.datetime.now()
                 if (now - self.last_grpc_call[address]).total_seconds() > const.Const.Peer.CHECK_LIVENESS_RATE:
@@ -66,6 +70,8 @@ class Master(PeerMasterServicer):
             for dead_peer in dead_peers:
                 self._remove_peer_from_network(AddressTupleSerializer.to_address(dead_peer))
 
+            self.network_lock.release()
+
     def _remove_peer_from_network(self, address: Address):
         address = AddressTupleSerializer.to_tuple(address)
         neighbours = self.network.pop(address, set())
@@ -74,6 +80,8 @@ class Master(PeerMasterServicer):
         self.last_grpc_call.pop(address, None)
 
     def PeerJoined(self, request, context):
+        self.network_lock.acquire()
+
         address: Tuple[int, int] = AddressTupleSerializer.to_tuple(request)
         self.network[address] = set()
         self.logger.info(f"Peer with ip={request.ip} , port={request.port} joined Koloocheh!")
@@ -86,11 +94,18 @@ class Master(PeerMasterServicer):
                 self.network[p].add(address)
                 self.logger.info(f"Connection established between {address}, {p}")
 
+        self.network_lock.release()
+
         return google.protobuf.empty_pb2.Empty()
 
     def GetNeighbours(self, request, context):
+        self.network_lock.acquire()
+
         address = AddressTupleSerializer.to_tuple(request)
         self.last_grpc_call[address] = datetime.datetime.now()
+
+        self.network_lock.release()
+
         return NeighbourList(
             neighbours=[
                 AddressTupleSerializer.to_address(x)
