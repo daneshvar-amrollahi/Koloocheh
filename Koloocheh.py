@@ -18,7 +18,7 @@ def main():
             master.run()
 
         elif sys.argv[1] == "peer":
-            ip, port = list(map(int, sys.argv[2:4]))
+            ip, port = sys.argv[2], int(sys.argv[3])
             address = Address(
                 ip=ip,
                 port=port

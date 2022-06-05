@@ -22,8 +22,8 @@ class Master(PeerMasterServicer):
     def __init__(self, address: Address):
         self.address: Address = address
         self.prob_edge = 1
-        self.network: Dict[Tuple[int, int], Set[Tuple[int, int]]] = dict()
-        self.last_grpc_call: Dict[Tuple[int, int], datetime.datetime] = dict()
+        self.network: Dict[Tuple[str, int], Set[Tuple[str, int]]] = dict()
+        self.last_grpc_call: Dict[Tuple[str, int], datetime.datetime] = dict()
         self.logger = logging.getLogger(__name__)
         self.network_lock = Lock()
 
@@ -81,7 +81,7 @@ class Master(PeerMasterServicer):
     def PeerJoined(self, request, context):
         self.network_lock.acquire()
 
-        address: Tuple[int, int] = AddressTupleSerializer.to_tuple(request)
+        address: Tuple[str, int] = AddressTupleSerializer.to_tuple(request)
         self.network[address] = set()
         self.logger.info(f"Peer with ip={request.ip} , port={request.port} joined Koloocheh!")
         self.last_grpc_call[address] = datetime.datetime.now()
@@ -121,6 +121,6 @@ def serve(master: Master):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     koloocheh_pb2_grpc.add_PeerMasterServicer_to_server(
         master, server)
-    server.add_insecure_port(f'localhost:{Const.MASTER_ADDRESS.port}')
+    server.add_insecure_port(f'0.0.0.0:{Const.MASTER_ADDRESS.port}')
     server.start()
     server.wait_for_termination()

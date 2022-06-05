@@ -8,7 +8,6 @@ from threading import Thread
 
 import google
 
-import const
 import koloocheh_pb2_grpc
 from const import Const
 from koloocheh_pb2_grpc import PeerToPeerServicer
@@ -67,7 +66,9 @@ class Peer(PeerToPeerServicer):
 
         if found:
             file_requester_address: Address = request.addr
-            with grpc.insecure_channel(f'localhost:{file_requester_address.port}') as channel:
+            with grpc.insecure_channel(
+                    f'{file_requester_address.ip}:{file_requester_address.port}'
+            ) as channel:
                 stub = koloocheh_pb2_grpc.PeerToPeerStub(channel)
                 stub.FoundFile(
                     SearchResponse(
@@ -110,7 +111,7 @@ class Peer(PeerToPeerServicer):
 
         self.query_mark.add(identifier)
         self.queries_initiated[identifier] = datetime.datetime.now()
-
+        self.query_files[identifier] = []
         self.id_to_filename[identifier] = name
 
         self.search(name, identifier)
@@ -135,7 +136,9 @@ class Peer(PeerToPeerServicer):
             t.join()
 
     def _search(self, identifier, name, neighbour_addr):
-        with grpc.insecure_channel(f'localhost:{neighbour_addr.port}') as channel:
+        with grpc.insecure_channel(
+                f'{neighbour_addr.ip}:{neighbour_addr.port}'
+        ) as channel:
             stub = koloocheh_pb2_grpc.PeerToPeerStub(channel)
 
             stub.SearchFile(
@@ -150,7 +153,9 @@ class Peer(PeerToPeerServicer):
         self.neighbours.append(address)
 
     def advertise_to_master(self):
-        with grpc.insecure_channel(f'localhost:{const.Const.MASTER_ADDRESS.port}') as channel:
+        with grpc.insecure_channel(
+                f'{Const.MASTER_ADDRESS.ip}:{Const.MASTER_ADDRESS.port}'
+        ) as channel:
             stub = koloocheh_pb2_grpc.PeerMasterStub(channel)
             stub.PeerJoined(self.address)
 
@@ -158,7 +163,7 @@ class Peer(PeerToPeerServicer):
         while True:
             time.sleep(Const.Peer.GET_NEIGHBOUR_RATE)
             with grpc.insecure_channel(
-                    f'localhost:{const.Const.MASTER_ADDRESS.port}'
+                    f'{Const.MASTER_ADDRESS.ip}:{Const.MASTER_ADDRESS.port}'
             ) as channel:
                 stub = koloocheh_pb2_grpc.PeerMasterStub(channel)
                 self.neighbours = stub.GetNeighbours(self.address).neighbours
@@ -174,7 +179,7 @@ class Peer(PeerToPeerServicer):
                         Const.Peer.QUERY_TTL:
 
                     if len(self.query_files[query]) == 0:
-                        self.logger.info(f'query (id={query}, filename={self.id_to_filename[query]}) expired')
+                        self.logger.info(f"Query(id={query}, filename={self.id_to_filename[query]}) not found.")
                         queries_expired.append(query)
                     else:
                         self._download_file(self.query_files[query], self.id_to_filename[query])
@@ -190,7 +195,7 @@ class Peer(PeerToPeerServicer):
                          f"file {filename} from peer ip={address.ip},port={address.port}")
 
         with grpc.insecure_channel(
-                f'localhost:{address.port}'
+                f'{address.ip}:{address.port}'
         ) as channel:
             stub = koloocheh_pb2_grpc.PeerToPeerStub(channel)
             downloaded_file = stub.DownloadFile(FileRequest(name=filename))
@@ -207,6 +212,6 @@ def serve(peer: Peer):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     koloocheh_pb2_grpc.add_PeerToPeerServicer_to_server(
         peer, server)
-    server.add_insecure_port(f'localhost:{peer.address.port}')
+    server.add_insecure_port(f'0.0.0.0:{peer.address.port}')
     server.start()
     server.wait_for_termination()
