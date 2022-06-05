@@ -1,4 +1,3 @@
-import datetime
 import logging
 import random
 import time
@@ -11,7 +10,7 @@ import datetime
 
 from concurrent import futures
 from threading import Thread, Lock
-from typing import List, Dict, Tuple, Set
+from typing import Dict, Tuple, Set
 from const import Const
 from koloocheh_pb2 import Address, NeighbourList
 from koloocheh_pb2_grpc import PeerMasterServicer
