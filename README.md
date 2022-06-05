@@ -34,14 +34,13 @@ To run Koloocheh, follow the following steps:
 
 ## How to run?
 
-### Execution
-#### Master
+### Master
 The master should be created exactly once (in the very beginning):
 ```
 $ python Koloocheh.py master
 ```
 
-#### Peer
+### Peer
 A new peer can join the network using the following command:
 ```
 $ python Koloocheh.py peer <ip> <port>
