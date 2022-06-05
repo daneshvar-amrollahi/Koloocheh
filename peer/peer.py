@@ -4,6 +4,8 @@ import string
 import time
 from concurrent import futures
 import logging
+from threading import Thread
+
 import google
 
 import const
@@ -84,7 +86,6 @@ class Peer(PeerToPeerServicer):
             if file.name == filename:
                 return file
 
-
     def upload(self, name: str, data: str):
         file = File(
             name=name,
@@ -120,8 +121,18 @@ class Peer(PeerToPeerServicer):
         if identifier not in self.query_mark:
             self.query_mark.add(identifier)
         self.logger.info(f'Neighbours before search: {self.neighbours}')
+
+        threads_search: List[Thread] = []
         for neighbour_addr in self.neighbours:
-            self._search(identifier, name, neighbour_addr)
+            t = Thread(
+                target=self._search,
+                args=(identifier, name, neighbour_addr,)
+            )
+            threads_search.append(t)
+            t.start()
+
+        for t in threads_search:
+            t.join()
 
     def _search(self, identifier, name, neighbour_addr):
         with grpc.insecure_channel(f'localhost:{neighbour_addr.port}') as channel:
@@ -185,7 +196,6 @@ class Peer(PeerToPeerServicer):
             downloaded_file = stub.DownloadFile(FileRequest(name=filename))
             self.logger.info(f"Peer ip={self.address.ip},port={self.address.port} downloaded " +
                              f"file {downloaded_file}")
-
 
     def _remove_query(self, query: str):
         self.queries_initiated.pop(query, None)
