@@ -58,10 +58,10 @@ A peer can view its own files using the following command:
 $ get_files
 ```
 
-A peer can search for a file in the whole network using the following command:
+A peer can request a file using the following command:
 
 ```
-$ search <file_name>
+$ download <file_name>
 ```
 
 ### Supported Commands for Master
