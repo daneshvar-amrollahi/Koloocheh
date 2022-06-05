@@ -34,14 +34,40 @@ To run Koloocheh, follow the following steps:
 
 ## How to run?
 
-### Master
-The master is created exactly once (in the very beginning):
+### Execution
+#### Master
+The master should be created exactly once (in the very beginning):
 ```
 $ python Koloocheh.py master
 ```
 
-### Peer
+#### Peer
 A new peer can join the network using the following command:
 ```
 $ python Koloocheh.py peer <ip> <port>
+```
+
+### Supported Commands for Peer
+
+A peer can upload a file using the following command:
+```
+$ upload <file_name> <file_data>
+```
+
+A peer can view its own files using the following command:
+```
+$ get_files
+```
+
+A peer can search for a file in the whole network using the following command:
+
+```
+$ search <file_name>
+```
+
+### Supported Commands for Master
+
+The graph representing the whole network can be viewed using the following command:
+```
+show
 ```
