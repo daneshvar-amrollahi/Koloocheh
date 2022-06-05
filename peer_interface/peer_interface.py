@@ -41,9 +41,9 @@ class PeerInterface:
 
     def handle_command(self):
         command = list(map(str, input().split()))
-        if command[0] == "search":
+        if command[0] == "download":
             name = command[1]
-            self.peer.initiate_search(name=name)
+            self.peer.download(name=name)
         if command[0] == "upload":
             name, data = command[1:]
             self.peer.upload(

@@ -25,6 +25,11 @@ class PeerToPeerStub(object):
                 request_serializer=koloocheh__pb2.SearchResponse.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.DownloadFile = channel.unary_unary(
+                '/PeerToPeer/DownloadFile',
+                request_serializer=koloocheh__pb2.FileRequest.SerializeToString,
+                response_deserializer=koloocheh__pb2.File.FromString,
+                )
 
 
 class PeerToPeerServicer(object):
@@ -42,6 +47,12 @@ class PeerToPeerServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DownloadFile(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PeerToPeerServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -54,6 +65,11 @@ def add_PeerToPeerServicer_to_server(servicer, server):
                     servicer.FoundFile,
                     request_deserializer=koloocheh__pb2.SearchResponse.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'DownloadFile': grpc.unary_unary_rpc_method_handler(
+                    servicer.DownloadFile,
+                    request_deserializer=koloocheh__pb2.FileRequest.FromString,
+                    response_serializer=koloocheh__pb2.File.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -96,6 +112,23 @@ class PeerToPeer(object):
         return grpc.experimental.unary_unary(request, target, '/PeerToPeer/FoundFile',
             koloocheh__pb2.SearchResponse.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DownloadFile(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/PeerToPeer/DownloadFile',
+            koloocheh__pb2.FileRequest.SerializeToString,
+            koloocheh__pb2.File.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

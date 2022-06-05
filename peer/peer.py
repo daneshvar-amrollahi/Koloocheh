@@ -10,7 +10,7 @@ import const
 import koloocheh_pb2_grpc
 from const import Const
 from koloocheh_pb2_grpc import PeerToPeerServicer
-from koloocheh_pb2 import Address, File, SearchMessage, SearchResponse
+from koloocheh_pb2 import Address, File, SearchMessage, SearchResponse, FileRequest
 import grpc
 from typing import List, Set, Dict
 
@@ -78,6 +78,13 @@ class Peer(PeerToPeerServicer):
 
         return google.protobuf.empty_pb2.Empty()
 
+    def DownloadFile(self, request, context):
+        filename = request.name
+        for file in self.files:
+            if file.name == filename:
+                return file
+
+
     def upload(self, name: str, data: str):
         file = File(
             name=name,
@@ -97,7 +104,7 @@ class Peer(PeerToPeerServicer):
             )
         )
 
-    def initiate_search(self, name: str):
+    def download(self, name: str):
         identifier = self.gen_random_identifier()
 
         self.query_mark.add(identifier)
@@ -144,7 +151,6 @@ class Peer(PeerToPeerServicer):
             ) as channel:
                 stub = koloocheh_pb2_grpc.PeerMasterStub(channel)
                 self.neighbours = stub.GetNeighbours(self.address).neighbours
-                # self.logger.info(f'Neighbours received from master: \n{self.neighbours}')
 
     def check_query_results(self):
         """Check status for each query"""
@@ -155,11 +161,31 @@ class Peer(PeerToPeerServicer):
             for query in self.queries_initiated:
                 if (datetime.datetime.now() - self.queries_initiated[query]).total_seconds() > \
                         Const.Peer.QUERY_TTL:
-                    self.logger.info(f'query (id={query}, filename={self.id_to_filename[query]}) expired')
-                    queries_expired.append(query)
+
+                    if len(self.query_files[query]) == 0:
+                        self.logger.info(f'query (id={query}, filename={self.id_to_filename[query]}) expired')
+                        queries_expired.append(query)
+                    else:
+                        self._download_file(self.query_files[query], self.id_to_filename[query])
+                        queries_expired.append(query)
 
             for query in queries_expired:
                 self._remove_query(query)
+
+    def _download_file(self, query_responders: List[Address], filename: str):
+
+        address = random.choice(query_responders)
+        self.logger.info(f"Peer ip={self.address.ip},port={self.address.port} downloading "
+                         f"file {filename} from peer ip={address.ip},port={address.port}")
+
+        with grpc.insecure_channel(
+                f'localhost:{address.port}'
+        ) as channel:
+            stub = koloocheh_pb2_grpc.PeerToPeerStub(channel)
+            downloaded_file = stub.DownloadFile(FileRequest(name=filename))
+            self.logger.info(f"Peer ip={self.address.ip},port={self.address.port} downloaded " +
+                             f"file {downloaded_file}")
+
 
     def _remove_query(self, query: str):
         self.queries_initiated.pop(query, None)

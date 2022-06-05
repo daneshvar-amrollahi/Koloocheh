@@ -23,9 +23,14 @@ message File {
     string data = 2;
 }
 
+message FileRequest {
+    string name = 1;
+}
+
 service PeerToPeer {
   rpc SearchFile(SearchMessage) returns (google.protobuf.Empty) {}
   rpc FoundFile(SearchResponse) returns (google.protobuf.Empty) {}
+  rpc DownloadFile(FileRequest) returns (File) {}
 }
 
 message NeighbourList {
