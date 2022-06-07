@@ -8,6 +8,6 @@ class AddressTupleSerializer:
         return address.ip, address.port
 
     @staticmethod
-    def to_address(tuple_: Tuple[int, int]):
+    def to_address(tuple_: Tuple[str, int]):
         return Address(ip=tuple_[0], port=tuple_[1])
 

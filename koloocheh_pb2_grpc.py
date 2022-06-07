@@ -87,7 +87,6 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -96,7 +95,7 @@ class PeerToPeer(object):
             koloocheh__pb2.SearchMessage.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def FoundFile(request,
@@ -104,7 +103,6 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -113,7 +111,7 @@ class PeerToPeer(object):
             koloocheh__pb2.SearchResponse.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def DownloadFile(request,
@@ -121,7 +119,6 @@ class PeerToPeer(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -130,7 +127,7 @@ class PeerToPeer(object):
             koloocheh__pb2.FileRequest.SerializeToString,
             koloocheh__pb2.File.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)
 
 
 class PeerMasterStub(object):
@@ -198,7 +195,6 @@ class PeerMaster(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -207,7 +203,7 @@ class PeerMaster(object):
             koloocheh__pb2.Address.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def GetNeighbours(request,
@@ -215,7 +211,6 @@ class PeerMaster(object):
             options=(),
             channel_credentials=None,
             call_credentials=None,
-            insecure=False,
             compression=None,
             wait_for_ready=None,
             timeout=None,
@@ -224,4 +219,4 @@ class PeerMaster(object):
             koloocheh__pb2.Address.SerializeToString,
             koloocheh__pb2.NeighbourList.FromString,
             options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            call_credentials, compression, wait_for_ready, timeout, metadata)

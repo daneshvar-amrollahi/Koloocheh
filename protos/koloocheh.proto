@@ -3,7 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 
 message Address {
-  int32 ip = 1;
+  string ip = 1;
   int32 port = 2;
 }
 
