@@ -70,3 +70,11 @@ The graph representing the whole network can be viewed using the following comma
 ```shell
 $ show
 ```
+
+## Documentation
+
+Please refer to our wiki at https://github.com/daneshvar-amrollahi/Koloocheh/wiki for further details on how this system works. 
+
+## Contributors
+* [Daneshvar Amrollahi](https://daneshvar-amrollahi.github.io/)
+* [Mahyar Karimi](https://github.com/moyarka)
